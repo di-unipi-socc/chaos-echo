@@ -24,10 +24,6 @@ public class EchoMessage {
     }
 
     public String toString() {
-        return "[" + hash + "] " + content; 
-    }
-
-    public String toJSONString() {
         return "{ \"hash\": \"" + hash + "\", \"content: \"" + content + "\" }"; 
     }
 
