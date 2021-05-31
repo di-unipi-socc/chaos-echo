@@ -9,7 +9,7 @@ services:
                 image: chaosecho/service:1
                 environment:
                         BACKEND_SERVICES: "backend"
-                        TIMEOUT: 34
+                        TIMEOUT: 100
                         PICK_PERCENTAGE: 100
                         FAIL_PERCENTAGE: 20
                 depends_on:
@@ -20,6 +20,6 @@ services:
                 build: .
                 image: chaosecho/service:1
                 environment:
-                        TIMEOUT: 15
+                        TIMEOUT: 1000
                         PICK_PERCENTAGE: 50
                         FAIL_PERCENTAGE: 20

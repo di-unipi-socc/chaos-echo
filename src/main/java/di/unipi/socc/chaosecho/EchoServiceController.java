@@ -99,7 +99,7 @@ public class EchoServiceController {
             if(unresponsive) {
                 log.debug("Unresponsive");
                 try {
-                    Thread.sleep(10*timeout);
+                    Thread.sleep(10000*timeout);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
