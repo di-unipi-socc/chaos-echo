@@ -26,7 +26,7 @@ public class EchoMessage {
     }
 
     public String toString() {
-        return "{ \"hash\": \"" + hash + "\", \"content: \"" + content + "\" }"; 
+        return "{ \"hash\": \"" + hash + "\", \"content\": \"" + content + "\" }"; 
     }
 
     public static EchoMessage random() {
