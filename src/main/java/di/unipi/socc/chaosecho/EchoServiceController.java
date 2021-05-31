@@ -64,7 +64,9 @@ public class EchoServiceController {
                     // Message preparation
                     HttpHeaders headers = new HttpHeaders();
                     headers.setContentType(MediaType.APPLICATION_JSON);
-                    HttpEntity<String> request = new HttpEntity<String>(EchoMessage.random().toString(), headers);
+                    String messageForBackend = EchoMessage.random().toString();
+                    log.info("Message [ " + messageForBackend + " ] created");
+                    HttpEntity<String> request = new HttpEntity<String>(messageForBackend, headers);
                     
                     // Sending request message and waiting for response
                     log.info("Sending message to " + service);
