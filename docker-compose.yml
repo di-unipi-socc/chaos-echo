@@ -1,0 +1,26 @@
+version: '3.7'
+
+# Simple application with a publicly available frontend connecting to a backend
+# (frontend accessible at host's port 8080)
+
+services: 
+        frontend:
+                build: .
+                image: chaosecho/service:1
+                environment:
+                        BACKEND_SERVICES: "backend:"
+                        TIMEOUT: 34
+                        PICK_PERCENTAGE: 100
+                        FAIL_PERCENTAGE: 20
+                depends_on:
+                        - backend
+                ports:
+                        - "8080:80"
+        backend:
+                build: .
+                image: chaosecho/service:1
+                environment:
+                        BACKEND_SERVICES: ""
+                        TIMEOUT: 15
+                        PICK_PERCENTAGE: 50
+                        FAIL_PERCENTAGE: 20
