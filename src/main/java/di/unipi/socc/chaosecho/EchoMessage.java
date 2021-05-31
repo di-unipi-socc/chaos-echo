@@ -27,6 +27,11 @@ public class EchoMessage {
         return "[" + hash + "] " + content; 
     }
 
+    public String toJSONString() {
+        return "{ \"hash\": \"" + hash + "\", \"content: \"" + content + "\" }"; 
+    }
+
+
     public static EchoMessage random() {
         EchoMessage em = new EchoMessage();
 

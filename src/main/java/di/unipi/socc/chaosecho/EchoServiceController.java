@@ -5,13 +5,17 @@ import java.util.Random;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 @RestController
 @RequestMapping("/echo")
@@ -21,6 +25,9 @@ public class EchoServiceController {
 
     @Value("${config.backendServices}")
     private String backendServices;
+
+    @Value("${config.timeout}")
+    private int timeout;
 
     @Value("${config.pickProbability}")
     private int pickProbability;
@@ -44,18 +51,40 @@ public class EchoServiceController {
 
         // If there are backend services 
         if(backendServices != null) {
+            // Rest client setup
+            SimpleClientHttpRequestFactory client = new SimpleClientHttpRequestFactory();
+            client.setConnectTimeout(timeout);
+            client.setReadTimeout(timeout);
+            RestTemplate rt = new RestTemplate(client);
+
             // Send random messages to (a random subset of) backend services to emulate message processing
             for (String service : backendServices.split(":")) {
                 int pickValue = rand.nextInt(100);
-                if(pickValue <= pickProbability) {
+                if(pickValue <= pickProbability) {   
+                    // Message preparation
+                    HttpHeaders headers = new HttpHeaders();
+                    headers.setContentType(MediaType.APPLICATION_JSON);
+                    HttpEntity<String> request = new HttpEntity<String>(EchoMessage.random().toJSONString(), headers);
+                    
+                    // Sending request message and waiting for response
                     log.info("Sending message to " + service);
-                    // TODO send message
-                    log.info("Receiving answer from " + service);
+                    try {
+                        String serviceURL = "http://" + service;
+                        ResponseEntity<EchoMessage> response = rt.postForEntity(serviceURL, request, EchoMessage.class);
+                        log.info("Receiving answer from " + service);
+
+                        // Checking response's status code
+                        if(!response.getStatusCode().equals(HttpStatus.OK)) {
+                            log.error("Error response (code: " + response.getStatusCode() + ") received from " + service);
+                            reply = new ResponseEntity<EchoMessage>(EchoMessage.fail("Failing to contact backend services"), HttpStatus.INTERNAL_SERVER_ERROR);
+                        }
+                    } catch (Exception e) {
+                        log.error("Failing to contact " + service + ". Root cause: " + e);
+                        reply = new ResponseEntity<EchoMessage>(EchoMessage.fail("Failing to contact backend services"), HttpStatus.INTERNAL_SERVER_ERROR);
+                    }
                 } 
             }
         }
-
-        // TODO : Change reply's status code based on answers from "depends on" services
         
         // Checks whether it (randomly) failed, independently from backend services 
         int failValue = rand.nextInt(100);

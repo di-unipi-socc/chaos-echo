@@ -12,6 +12,9 @@ public class LoggerInterceptor implements HandlerInterceptor {
 
     private static Logger log = LoggerFactory.getLogger(LoggerInterceptor.class);
 
+    // TODO: Standardise logging messages 
+    // TODO: Identify sender in logging messages
+    
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         log.info("[preHandle][" + request + "]" + "[" + request.getMethod() + "]" + request.getRequestURI());
