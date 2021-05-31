@@ -4,6 +4,8 @@ import java.util.Random;
 
 public class EchoMessage {
 
+    private static String alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+
     private int hash;
     private String content;
 
@@ -36,11 +38,9 @@ public class EchoMessage {
         int contentSize = rand.nextInt(500);
         StringBuilder contentBuffer = new StringBuilder(contentSize);
         for(int i=0; i<contentSize; i++) {
-            int asciiChar = 32 + rand.nextInt(94);
-            contentBuffer.append((char) asciiChar);
+            contentBuffer.append(alphabet.charAt(rand.nextInt(alphabet.length())));
         }
-        em.setContent(contentBuffer.toString().replace("\"",""));
-        
+
         // Hash content
         em.setHash(em.getContent().hashCode());
 
