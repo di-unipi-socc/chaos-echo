@@ -39,8 +39,8 @@ public class EchoMessage {
             int asciiChar = 32 + rand.nextInt(94);
             contentBuffer.append((char) asciiChar);
         }
-        em.setContent(contentBuffer.toString());
-               
+        em.setContent(contentBuffer.toString().replace("\"",""));
+        
         // Hash content
         em.setHash(em.getContent().hashCode());
 
