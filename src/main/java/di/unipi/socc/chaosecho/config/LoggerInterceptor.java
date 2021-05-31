@@ -12,23 +12,20 @@ public class LoggerInterceptor implements HandlerInterceptor {
 
     private static Logger log = LoggerFactory.getLogger(LoggerInterceptor.class);
 
-    // TODO: Standardise logging messages 
-    // TODO: Identify sender in logging messages
-    
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("[preHandle][" + request + "]" + "[" + request.getMethod() + "]" + request.getRequestURI());
+        log.info("Received " + request.getMethod() + " request from " + request.getRemoteAddr() + " (" + request.getRemoteHost() + ")");
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("[postHandle][" + request + "]");
+        log.info("Handled " + request.getMethod() + " request from " + request.getRemoteAddr() + " (" + request.getRemoteHost() + ")");
     }
     
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response,Object handler, Exception ex) throws Exception {
         if (ex != null) ex.printStackTrace();
-        log.info("[afterCompletion][" + request + "][exception: " + ex + "]");
+        log.info("Answered to " + request.getMethod() + " request from " + request.getRemoteAddr() + " (" + request.getRemoteHost() + ")");
     }
 }
