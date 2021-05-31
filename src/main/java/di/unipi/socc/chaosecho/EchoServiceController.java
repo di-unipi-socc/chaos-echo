@@ -69,8 +69,8 @@ public class EchoServiceController {
                     // Sending request message and waiting for response
                     log.info("Sending message to " + service);
                     try {
-                        String serviceURL = "http://" + service;
-                        ResponseEntity<EchoMessage> response = rt.postForEntity(serviceURL, request, EchoMessage.class);
+                        String endpoint = "http://" + service + "/echo";
+                        ResponseEntity<EchoMessage> response = rt.postForEntity(endpoint, request, EchoMessage.class);
                         log.info("Receiving answer from " + service);
 
                         // Checking response's status code
