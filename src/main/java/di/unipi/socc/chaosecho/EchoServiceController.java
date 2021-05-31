@@ -112,10 +112,6 @@ public class EchoServiceController {
             }
         }
 
-        // TODO : Add debug logging for "ground truth"
-
-        // TODO : Adjust/standardise log messages
-
         return reply;
     }
     
