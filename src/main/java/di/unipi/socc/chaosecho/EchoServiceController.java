@@ -23,7 +23,7 @@ public class EchoServiceController {
 
     private static Logger log = LoggerFactory.getLogger(EchoServiceController.class);
 
-    @Value("${BACKEND_SERVICES}")
+    @Value("${BACKEND_SERVICES:#{null}}") // default to null, if no backend service is listed
     private String backendServices;
 
     @Value("${TIMEOUT}")
@@ -57,34 +57,37 @@ public class EchoServiceController {
             client.setReadTimeout(timeout);
             RestTemplate rt = new RestTemplate(client);
 
-            // Send random messages to (a random subset of) backend services to emulate message processing
-            for (String service : backendServices.split(":")) {
-                int pickValue = rand.nextInt(100);
-                if(pickValue <= pickProbability) {   
-                    // Message preparation
-                    HttpHeaders headers = new HttpHeaders();
-                    headers.setContentType(MediaType.APPLICATION_JSON);
-                    String messageForBackend = EchoMessage.random().toString();
-                    log.info("Message [ " + messageForBackend + " ] created");
-                    HttpEntity<String> request = new HttpEntity<String>(messageForBackend, headers);
-                    
-                    // Sending request message and waiting for response
-                    log.info("Sending message to " + service);
-                    try {
-                        String endpoint = "http://" + service + "/echo";
-                        ResponseEntity<EchoMessage> response = rt.postForEntity(endpoint, request, EchoMessage.class);
-                        log.info("Receiving answer from " + service);
+            // If there exists backend services to invoke
+            if(backendServices != null) {
+                // Send random messages to (a random subset of) backend services to emulate message processing
+                for (String service : backendServices.split(":")) {
+                    int pickValue = rand.nextInt(100);
+                    if(pickValue <= pickProbability) {   
+                        // Message preparation
+                        HttpHeaders headers = new HttpHeaders();
+                        headers.setContentType(MediaType.APPLICATION_JSON);
+                        String messageForBackend = EchoMessage.random().toString();
+                        log.info("Message [ " + messageForBackend + " ] created");
+                        HttpEntity<String> request = new HttpEntity<String>(messageForBackend, headers);
+                        
+                        // Sending request message and waiting for response
+                        log.info("Sending message to " + service);
+                        try {
+                            String endpoint = "http://" + service + "/echo";
+                            ResponseEntity<EchoMessage> response = rt.postForEntity(endpoint, request, EchoMessage.class);
+                            log.info("Receiving answer from " + service);
 
-                        // Checking response's status code
-                        if(!response.getStatusCode().equals(HttpStatus.OK)) {
-                            log.error("Error response (code: " + response.getStatusCode() + ") received from " + service);
+                            // Checking response's status code
+                            if(!response.getStatusCode().equals(HttpStatus.OK)) {
+                                log.error("Error response (code: " + response.getStatusCode() + ") received from " + service);
+                                reply = new ResponseEntity<EchoMessage>(EchoMessage.fail("Failing to contact backend services"), HttpStatus.INTERNAL_SERVER_ERROR);
+                            }
+                        } catch (Exception e) {
+                            log.error("Failing to contact " + service + ". Root cause: " + e);
                             reply = new ResponseEntity<EchoMessage>(EchoMessage.fail("Failing to contact backend services"), HttpStatus.INTERNAL_SERVER_ERROR);
                         }
-                    } catch (Exception e) {
-                        log.error("Failing to contact " + service + ". Root cause: " + e);
-                        reply = new ResponseEntity<EchoMessage>(EchoMessage.fail("Failing to contact backend services"), HttpStatus.INTERNAL_SERVER_ERROR);
-                    }
-                } 
+                    } 
+                }
             }
         }
         
