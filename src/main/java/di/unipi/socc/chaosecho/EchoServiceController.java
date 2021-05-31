@@ -23,16 +23,16 @@ public class EchoServiceController {
 
     private static Logger log = LoggerFactory.getLogger(EchoServiceController.class);
 
-    @Value("${config.backendServices}")
+    @Value("${BACKEND_SERVICES}")
     private String backendServices;
 
-    @Value("${config.timeout}")
+    @Value("${TIMEOUT}")
     private int timeout;
 
-    @Value("${config.pickProbability}")
+    @Value("${PICK_PERCENTAGE}")
     private int pickProbability;
 
-    @Value("${config.failProbability}")
+    @Value("${FAIL_PERCENTAGE}")
     private int failProbability;
 
     @PostMapping(
