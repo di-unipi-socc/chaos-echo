@@ -40,6 +40,7 @@ public class EchoMessage {
         for(int i=0; i<contentSize; i++) {
             contentBuffer.append(alphabet.charAt(rand.nextInt(alphabet.length())));
         }
+        em.setContent(contentBuffer.toString());
 
         // Hash content
         em.setHash(em.getContent().hashCode());
