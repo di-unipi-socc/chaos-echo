@@ -89,8 +89,22 @@ public class EchoServiceController {
         // Checks whether it (randomly) failed, independently from backend services 
         int failValue = rand.nextInt(100);
         if (failValue <= failProbability) {
-            log.error("Failing on my own");
-            reply = new ResponseEntity<EchoMessage>(EchoMessage.fail("Unexpected error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            boolean unresponsive = rand.nextBoolean();
+            // Case: Service becoming unresponsive (internal failure not logged)
+            if(unresponsive) {
+                log.debug("Unresponsive");
+                try {
+                    Thread.sleep(10*timeout);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+            // Case: Internal, unexpected failure (recognised and logged)
+            else {
+                log.error("Failing on my own");
+                reply = new ResponseEntity<EchoMessage>(EchoMessage.fail("Unexpected error"), HttpStatus.INTERNAL_SERVER_ERROR);
+            }
         }
 
         // TODO : Add debug logging for "ground truth"

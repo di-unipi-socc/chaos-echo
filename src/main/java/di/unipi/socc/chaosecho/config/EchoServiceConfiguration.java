@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Configuration;
 public class EchoServiceConfiguration {
 
     private String backendServices;
-    private int connectionTimeout;
+    private int timeout;
     private int pickProbability;
     private int failProbability;
 
@@ -20,12 +20,12 @@ public class EchoServiceConfiguration {
         this.backendServices = backendServices;
     }
     
-    public int getConnectionTimeout() {
-        return connectionTimeout;
+    public int getTimeout() {
+        return timeout;
     }
 
-    public void setConnectionTimeout(int connectionTimeout) {
-        this.connectionTimeout = connectionTimeout;
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
     }
 
     public int getPickProbability() {
