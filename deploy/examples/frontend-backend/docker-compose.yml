@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.8'
 
 # Simple application with a publicly available frontend connecting to a backend
 # (frontend accessible at host's port 8080)
@@ -15,7 +15,6 @@ services:
                         - variables.env
                 depends_on:
                         - backend
-                        - logstash
                 ports:
                         - "8080:80"
         # ----------
@@ -25,33 +24,8 @@ services:
                 image: diunipisocc/chaosecho:1
                 env_file:
                         - variables.env
-                depends_on:
-                        - logstash 
                 deploy:
                         replicas: 2
                         restart_policy:
                                         condition: any
                                         delay: 5s
-
-        # ----------
-        # LOG PARSER
-        # ----------
-        logstash:
-                build:
-                        context: ../logstash
-                volumes:
-                        - type: bind
-                          source: ../../logstash/config/logstash.yml
-                          target: /usr/share/logstash/config/logstash.yml
-                          read_only: true
-                        - type: bind
-                          source: ../../logstash/pipeline
-                          target: /usr/share/logstash/pipeline
-                          read_only: true
-                        - type: bind
-                          source: .
-                          target: /usr/share/logstash/log
-                ports:
-                        - "9600:9600/udp"
-                environment:
-                        LS_JAVA_OPTS: "-Xmx256m -Xms256m"
