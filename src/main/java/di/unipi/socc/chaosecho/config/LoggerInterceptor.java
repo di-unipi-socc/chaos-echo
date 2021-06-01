@@ -25,7 +25,7 @@ public class LoggerInterceptor implements HandlerInterceptor {
     
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response,Object handler, Exception ex) throws Exception {
-        if (ex != null) ex.printStackTrace();
-        log.info("Answered to " + request.getMethod() + " request from " + request.getRemoteAddr() + " (" + request.getRemoteHost() + ")");
+        if (ex == null) 
+            log.info("Answered to " + request.getMethod() + " request from " + request.getRemoteAddr() + " (" + request.getRemoteHost() + ")");
     }
 }
