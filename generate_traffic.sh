@@ -42,6 +42,10 @@ done
 # --------------------
 
 for i in $(seq $N); do
-	curl -X POST -H 'Content-Type: application/json' -i http://localhost:8080/echo --data '{ "content": "FRONTEND REQUEST", "hash": "1" }'
+	curl -X POST -H 'Content-Type: application/json' \
+		-i http://localhost:8080/echo \
+		--data '{ "content": "FRONTEND REQUEST", "hash": "1" }' \
+		&> /dev/null &
+	echo "Request $i done"
 	sleep $P
 done
