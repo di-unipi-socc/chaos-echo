@@ -39,19 +39,19 @@ services:
         logstash:
                 build:
                         context: ../logstash
-                        volumes:
-                            - type: bind
-                              source: ../logstash/config/logstash.yml
-                              target: /usr/share/logstash/config/logstash.yml
-                              read_only: true
-                            - type: bind
-                              source: ../logstash/pipeline
-                              target: /usr/share/logstash/pipeline
-                              read_only: true
-                            - type: bind
-                              source: .
-                              target: /usr/share/logstash/log
-                        ports:
-                            - "9600:9600/udp"
-                        environment:
-                            LS_JAVA_OPTS: "-Xmx256m -Xms256m"
+                volumes:
+                        - type: bind
+                          source: ../logstash/config/logstash.yml
+                          target: /usr/share/logstash/config/logstash.yml
+                          read_only: true
+                        - type: bind
+                          source: ../logstash/pipeline
+                          target: /usr/share/logstash/pipeline
+                          read_only: true
+                        - type: bind
+                          source: .
+                          target: /usr/share/logstash/log
+                ports:
+                        - "9600:9600/udp"
+                environment:
+                        LS_JAVA_OPTS: "-Xmx256m -Xms256m"
