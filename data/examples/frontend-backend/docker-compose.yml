@@ -5,11 +5,10 @@ version: '3.7'
 
 services: 
         frontend:
-                build: .
-                image: chaosecho/service:1
+                image: diunipisocc/chaosecho:1
                 environment:
                         BACKEND_SERVICES: "backend"
-                        TIMEOUT: 100
+                        TIMEOUT: 10000
                         PICK_PERCENTAGE: 100
                         FAIL_PERCENTAGE: 20
                 depends_on:
@@ -17,9 +16,13 @@ services:
                 ports:
                         - "8080:80"
         backend:
-                build: .
-                image: chaosecho/service:1
+                image: diunipisocc/chaosecho:1
                 environment:
                         TIMEOUT: 1000
                         PICK_PERCENTAGE: 50
-                        FAIL_PERCENTAGE: 20
+                        FAIL_PERCENTAGE: 100
+                deploy:
+                        replicas: 2
+                        restart_policy:
+                                        condition: any
+                                        delay: 5s
