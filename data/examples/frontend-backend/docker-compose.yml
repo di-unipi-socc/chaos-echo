@@ -8,19 +8,16 @@ services:
                 image: diunipisocc/chaosecho:1
                 environment:
                         BACKEND_SERVICES: "backend"
-                        TIMEOUT: 10000
-                        PICK_PERCENTAGE: 100
-                        FAIL_PERCENTAGE: 20
+                env_file:
+                        - variables.env
                 depends_on:
                         - backend
                 ports:
                         - "8080:80"
         backend:
                 image: diunipisocc/chaosecho:1
-                environment:
-                        TIMEOUT: 1000
-                        PICK_PERCENTAGE: 50
-                        FAIL_PERCENTAGE: 100
+                env_file:
+                        - variables.env
                 deploy:
                         replicas: 2
                         restart_policy:
