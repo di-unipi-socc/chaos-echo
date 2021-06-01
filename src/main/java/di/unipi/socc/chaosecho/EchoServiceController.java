@@ -4,7 +4,10 @@ import java.util.Random;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.SpringApplication;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,6 +25,9 @@ import org.springframework.web.client.RestTemplate;
 public class EchoServiceController {
 
     private static Logger log = LoggerFactory.getLogger(EchoServiceController.class);
+
+    @Autowired
+    private ApplicationContext appContext;
 
     @Value("${BACKEND_SERVICES:#{null}}") // default to null, if no backend service is listed
     private String backendServices;
@@ -94,16 +100,15 @@ public class EchoServiceController {
         // Checks whether it (randomly) failed, independently from backend services 
         int failValue = rand.nextInt(100);
         if (failValue <= failProbability) {
-            boolean unresponsive = rand.nextBoolean();
-            // Case: Service becoming unresponsive (internal failure not logged)
-            if(unresponsive) {
-                log.debug("Unresponsive");
-                try {
-                    Thread.sleep(10000*timeout);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+            // Case: Service unexpectedly crashing (sometimes logging, sometimes not)
+            boolean crashing = rand.nextBoolean();
+            if(crashing) {
+                log.debug("Crashing");
+                boolean crashLogged = rand.nextBoolean();
+                if(crashLogged) {
+                    log.error("Crashing due to unrecoverable error");
                 }
-                return null;
+                SpringApplication.exit(appContext, () -> -1);
             }
             // Case: Internal, unexpected failure (recognised and logged)
             else {
