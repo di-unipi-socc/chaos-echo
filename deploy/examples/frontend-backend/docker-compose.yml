@@ -17,6 +17,11 @@ services:
                         - backend
                 ports:
                         - "8080:80"
+                logging:
+                        driver: gelf
+                        options: 
+                                gelf-address: "udp://localhost:12201"
+                                tag: "frontend"
         # ----------
         #  BACKEND
         # ----------
@@ -29,3 +34,35 @@ services:
                         restart_policy:
                                         condition: any
                                         delay: 5s
+                logging: 
+                        driver: gelf
+                        options:
+                                gelf-address: "udp://localhost:12201"
+                                tag: "backend"
+        # ----------
+        # ELK STACK
+        # ----------
+        elasticsearch:
+                image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+                environment:
+                        - discovery.type=single-node
+                ports: 
+                        - "9200:9200"
+        kibana:
+                image: docker.elastic.co/kibana/kibana:7.6.2
+                ports:
+                        - 5601:5601
+                depends_on:
+                        - elasticsearch
+                        - logstash
+        logstash:
+                image: docker.elastic.co/logstash/logstash:7.6.2
+                links:
+                        - elasticsearch
+                volumes:
+                        - .:/etc/logstash
+                command: logstash -f /etc/logstash/logstash.conf
+                ports:
+                        - 12201:12201/udp
+                depends_on:
+                        - elasticsearch
