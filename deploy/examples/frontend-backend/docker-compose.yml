@@ -13,9 +13,11 @@ services:
                         BACKEND_SERVICES: "backend"
                         TIMEOUT: 10000
                         PICK_PERCENTAGE: 60
-                        FAIL_PERCENTAGE: 10
+                        FAIL_PERCENTAGE: 5
                 depends_on:
                         - backend
+                        - logstash
+                        - kibana
                 ports:
                         - "8080:80"
                 logging:
@@ -31,12 +33,12 @@ services:
                 environment:
                         TIMEOUT: 10000
                         PICK_PERCENTAGE: 60
-                        FAIL_PERCENTAGE: 10
+                        FAIL_PERCENTAGE: 20
                 deploy:
                         replicas: 2
-                        restart_policy:
-                                        condition: any
-                                        delay: 5s
+                depends_on:
+                        - logstash
+                        - kibana
                 logging: 
                         driver: gelf
                         options:
@@ -60,8 +62,6 @@ services:
                         - logstash
         logstash:
                 image: docker.elastic.co/logstash/logstash:7.6.2
-                links:
-                        - elasticsearch
                 volumes:
                         - .:/etc/logstash
                 command: logstash -f /etc/logstash/logstash.conf
