@@ -37,7 +37,7 @@ Each containerised service requires a set of environment variables to be specifi
 ### Exposing services
 Each deployed instance of the Chaos Echo Service can be made accessible by exploiting Docker's native [port mapping](https://docs.docker.com/config/containers/container-networking/). It indeed only requires mapping the container's internal port `80` to any of the ports available on the host where the container is deployed.
 
-### Generating traffic
+### Loading services
 This repository includes a bash script (viz., [generate_traffic.sh](generate_traffic.sh)) enabling to load any exposed Chaos Echo Service. 
 The script enables sending a given number of requests, each after the other, by waiting a given period between subsequent requests. 
 
@@ -50,6 +50,8 @@ The usage of the script is as follows:
 ```
 By default, the script invokes the service published at `localhost:8080` by sending it `1000` requests every millisecond (viz., every `0.001` seconds)
 
+### Generating Docker Compose files
+The [Chaos Echo Composer](https://github.com/di-unipi-socc/chaos-echo-composer) enables generating Docker Compose files for running multiple Chaos Echo Services to emulate multi-service applications.
 
 ## Running available examples 
 Examples of Docker Compose files for running multiple interconnected Chaos Echo Services are available in a dedicated [folder](deploy/examples).
