@@ -3,7 +3,26 @@
 This repository contains the source code of the **Chaos Echo Service**, which can be used to create applications to "chaos test" solutions for fault resiliency in multi-service applications (e.g., fault recovery, detection, or root cause analysis).
 
 ## How it works
-TBA
+Each instance of Chaos Echo Service emulates a service processing incoming requests by invoking backend services, if any.
+
+### Failure behaviour
+An instance of Chaos Echo Service can also fail in processing incoming requests, either
+* since some backend service returns error messages once invoked, or
+* since such instance fails on its own.
+
+To emulate multiple possible behaviours for processing an incoming request, the backend services are invoked with a given (and customisable) probability, so that each incoming request is processed by invoking a random subset of the backend service.  
+
+Similarly, an instance of the Chaos Echo Service fails while processing an incoming request with a given (and customisable) probability. 
+Once failing, the instance of the Chaos Echo Service can either (i) return an error message and continue working or (ii) stop working without returning any answer to the service that send the request being processed. 
+The events (i) and (ii) are equally probable. 
+
+### Logging behaviour
+
+Events happening on the application are logged with a severity level, viz.,
+* `ERROR` -> error events, e.g., receiving an error message from some backend service or failing to process an incoming request (in the case of crashing, it is not ensured that the corresponding failure is logged by the service, to emulate the case of services unexpectedly failing without logging anything);
+* `INFO` -> any other event (e.g., receiving or answering to an incoming request, or sending a message to a backend service).
+
+To ensure that all notable events of the Chaos Echo Service are logged, and to provide the actually logged events with a ground thruth of what actually happended, each notable event is ensured to be logged with severity `DEBUG`. 
 
 ## Running Chaos Echo Services
 The **Chaos Echo Service** comes as a [Docker container](https://hub.docker.com/r/diunipisocc/chaosecho) that can be run standalone or (suggested) included in Docker Compose files to deploy arbitrary multi-service application topologies.
@@ -33,13 +52,13 @@ By default, the script invokes the service published at `localhost:8080` by send
 
 
 ## Running available examples 
+Examples of Docker Compose files for running multiple interconnected Chaos Echo Services are available in a dedicated [folder](deploy/examples).
 
-1. Go in example folder
-2. Run `docker stack deploy -c docker-compose.yml echo`
-3. (If Kibana deployed) connect to `http://<ipAddress>:5601` and browse service logs 
+To run such examples, after cloning this repository on the machine/cluster where to run the examples, 
+* move to the folder of the example to run and
+* run the command `docker stack deploy -c docker-compose.yml echo`
 
-TODOs: 
+This will deploy the specified application, whose frontend can be reached at
+`http://<ipAddress>:8080`. 
 
-* process logs to extract interesting fields
-* develop docker compose generator for creating docker-compose.yml given users' desired topology
-* !!! check if distributed tracing is needed: how to understand if an answer is for the same question? (perhaps enough to adapt `echo` logging to log before after same service invocation?) !!!
+Deployed applications can then be loaded by exploiting the script [generate_traffic.sh](generate_traffic.sh). This will produce logs that can be graphically browsed on the Kibana instance deployed alongside the application, which can be reached at `http://<ipAddress>:5601`. The produced logs are also stored in a logfile (viz., `echo-YYYY-MM-DD.log`), saved in the example folder.
