@@ -50,7 +50,7 @@ The usage of the script is as follows:
 ```
 By default, the script invokes the service published at `localhost:8080` by sending it `1000` requests every millisecond (viz., every `0.001` seconds)
 
-### Generating Docker Compose files
+### Generating Docker Compose files
 The [Chaos Echo Composer](https://github.com/di-unipi-socc/chaos-echo-composer) enables generating Docker Compose files for running multiple Chaos Echo Services to emulate multi-service applications.
 
 ## Running available examples 
