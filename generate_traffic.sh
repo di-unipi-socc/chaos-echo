@@ -36,6 +36,7 @@ while (( "$#" )); do
 				echo "ERROR: Argument for $1 is missing" >&2
 				exit 2
 			fi
+		;;
 		*)
 			echo "ERROR: Unsupported flag $1" >&2
 			echo ""
