@@ -27,7 +27,7 @@ services:
   #      Orders
   # ------------------
   orders:
-    depends_on: [users, carts, payment, shipping, oders_db, elasticsearch, kibana,
+    depends_on: [users, carts, payment, shipping, orders_db, elasticsearch, kibana,
       logstash]
     image: diunipisocc/chaosecho:1
     environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: 'users:carts:payment:shipping:oders_db'}
