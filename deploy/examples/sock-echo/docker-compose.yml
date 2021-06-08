@@ -1,0 +1,173 @@
+version: '3.8'
+
+services:
+  # ------------------
+  #     Frontend
+  # ------------------
+  edge_router:
+    ports: ['8080:80']
+    depends_on: [frontend, elasticsearch, kibana, logstash]
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: frontend}
+    deploy: {replicas: 1}
+    logging:
+      driver: gelf
+      options: {tag: edge_router, gelf-address: 'udp://localhost:12201'}
+
+  frontend:
+    depends_on: [orders, catalogue, users, carts, elasticsearch, kibana, logstash]
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: 'orders:catalogue:users:carts'}
+    deploy: {replicas: 1}
+    logging:
+      driver: gelf
+      options: {tag: frontend, gelf-address: 'udp://localhost:12201'}
+
+  # ------------------
+  #      Orders
+  # ------------------
+  orders:
+    depends_on: [users, carts, payment, shipping, oders_db, elasticsearch, kibana,
+      logstash]
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: 'users:carts:payment:shipping:oders_db'}
+    deploy: {replicas: 1}
+    logging:
+      driver: gelf
+      options: {tag: orders, gelf-address: 'udp://localhost:12201'}
+
+  orders_db:
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
+    depends_on: [elasticsearch, kibana, logstash]
+    logging:
+      driver: gelf
+      options: {tag: orders_db, gelf-address: 'udp://localhost:12201'}
+    deploy: {replicas: 1}
+
+  # ------------------
+  #     Catalogue
+  # ------------------
+  catalogue:
+    depends_on: [catalogue_db, elasticsearch, kibana, logstash]
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: catalogue_db}
+    deploy: {replicas: 1}
+    logging:
+      driver: gelf
+      options: {tag: catalogue, gelf-address: 'udp://localhost:12201'}
+
+  catalogue_db:
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
+    depends_on: [elasticsearch, kibana, logstash]
+    logging:
+      driver: gelf
+      options: {tag: catalogue_db, gelf-address: 'udp://localhost:12201'}
+    deploy: {replicas: 1}
+
+  # ------------------
+  #       Users
+  # ------------------
+  users:
+    depends_on: [users_db, elasticsearch, kibana, logstash]
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: users_db}
+    deploy: {replicas: 1}
+    logging:
+      driver: gelf
+      options: {tag: users, gelf-address: 'udp://localhost:12201'}
+
+  users_db:
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
+    depends_on: [elasticsearch, kibana, logstash]
+    logging:
+      driver: gelf
+      options: {tag: users_db, gelf-address: 'udp://localhost:12201'}
+    deploy: {replicas: 1}
+
+  # ------------------
+  #       Carts
+  # ------------------
+  carts:
+    depends_on: [carts_db, elasticsearch, kibana, logstash]
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: carts_db}
+    deploy: {replicas: 1}
+    logging:
+      driver: gelf
+      options: {tag: carts, gelf-address: 'udp://localhost:12201'}
+
+  carts_db:
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
+    depends_on: [elasticsearch, kibana, logstash]
+    logging:
+      driver: gelf
+      options: {tag: carts_db, gelf-address: 'udp://localhost:12201'}
+    deploy: {replicas: 1}
+
+  # ------------------
+  #      Payment
+  # ------------------
+  payment:
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
+    depends_on: [elasticsearch, kibana, logstash]
+    logging:
+      driver: gelf
+      options: {tag: payment, gelf-address: 'udp://localhost:12201'}
+    deploy: {replicas: 1}
+
+  # ------------------
+  #     Shipping
+  # ------------------
+  shipping:
+    depends_on: [rabbit_mq, elasticsearch, kibana, logstash]
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: rabbit_mq}
+    deploy: {replicas: 1}
+    logging:
+      driver: gelf
+      options: {tag: shipping, gelf-address: 'udp://localhost:12201'}
+
+  rabbit_mq:
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
+    depends_on: [elasticsearch, kibana, logstash]
+    logging:
+      driver: gelf
+      options: {tag: rabbit_mq, gelf-address: 'udp://localhost:12201'}
+    deploy: {replicas: 1}
+
+  queue_master:
+    ports: ['8081:80']
+    depends_on: [rabbit_mq, elasticsearch, kibana, logstash]
+    image: diunipisocc/chaosecho:1
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: rabbit_mq}
+    deploy: {replicas: 1}
+    logging:
+      driver: gelf
+      options: {tag: queue_master, gelf-address: 'udp://localhost:12201'}
+
+
+  # ------------------
+  #    ELK stack
+  # ------------------
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    environment: [discovery.type=single-node]
+    ports: ['9200:9200']
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.6.2
+    ports: ['5601:5601']
+    depends_on: [elasticsearch, logstash]
+
+  logstash:
+    image: docker.elastic.co/logstash/logstash:7.6.2
+    volumes: ['.:/etc/logstash']
+    command: logstash -f /etc/logstash/logstash.conf
+    ports: ['12201:12201/udp']
+    depends_on: [elasticsearch]
