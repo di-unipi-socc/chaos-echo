@@ -25,12 +25,12 @@ do
 	echo "* Docker stack deployment started"
 	docker stack deploy -c docker-compose.yml echo
 	echo -n "* Waiting for services to get online.." 
-	sleep 60
+	sleep 180
 	echo "done!"
 
 	# Load services
 	echo -n "* Loading services.."
-	./generate_traffic.sh -n 10000 > /dev/null
+	./generate_traffic.sh -n 20000 -p 0.01 > /dev/null
 	echo "done!"
 
 	# Remove Docker stack
@@ -43,11 +43,10 @@ do
 	echo "* Log file stored in fail_$PERC.log"
 
 	# Cleaning Docker runtime
-	echo -n "* Cleaning Docker runtime.."
+	echo -n "* Cleaning Docker runtime"
 	docker container prune -f
 	docker network prune -f
 	sleep 10
-	echo "done!"
 
 	OLD_PERC=$PERC
 done
