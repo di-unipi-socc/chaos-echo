@@ -65,5 +65,6 @@ for logFile in failFiles:
             if recoveryTimestamp:
                 recoveryTime += recoveryTimestamp - crashTimestamp
                 recoveryCount += 1
-    averageRecoveryTime = recoveryTime/recoveryCount
-    print("FILE:",logFile,"MILLISECS:",averageRecoveryTime)
+    if recoveryCount > 0:
+        averageRecoveryTime = recoveryTime/recoveryCount
+        print("FILE:",logFile,"MILLISECS:",averageRecoveryTime)
