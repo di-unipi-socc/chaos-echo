@@ -1,5 +1,7 @@
 package di.unipi.socc.chaosecho.config;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -14,18 +16,18 @@ public class LoggerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("Received " + request.getMethod() + " request from " + request.getRemoteAddr() + " (" + request.getRemoteHost() + ")");
+        log.info("Received " + request.getMethod() + " request from " + request.getRemoteAddr() + " (ID: " + request.getHeader("X-Request-ID") + ")");
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("Handled " + request.getMethod() + " request from " + request.getRemoteAddr() + " (" + request.getRemoteHost() + ")");
+        log.info("Handled " + request.getMethod() + " request from " + request.getRemoteAddr() + " (ID: " + request.getHeader("X-Request-ID") + ")");
     }
     
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response,Object handler, Exception ex) throws Exception {
         if (ex == null) 
-            log.info("Answered to " + request.getMethod() + " request from " + request.getRemoteAddr() + " (" + request.getRemoteHost() + ")");
+            log.info("Answered to " + request.getMethod() + " request from " + request.getRemoteAddr() + " with code: " + response.getStatus());
     }
 }

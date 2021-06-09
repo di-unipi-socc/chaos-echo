@@ -2,11 +2,14 @@ package di.unipi.socc.chaosecho;
 
 import java.util.Random;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 public class EchoMessage {
 
-    private static String alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
-
+    @JsonProperty
     private int hash;
+
+    @JsonProperty
     private String content;
 
     public int getHash() {
@@ -30,6 +33,7 @@ public class EchoMessage {
     }
 
     public static EchoMessage random() {
+        String alphabet = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
         EchoMessage em = new EchoMessage();
 
         Random rand = new Random();
