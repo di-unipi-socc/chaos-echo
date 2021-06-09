@@ -4,7 +4,7 @@ services:
   # ------------------
   #     Frontend
   # ------------------
-  edge_router:
+  edgeRouter:
     ports: ['8080:80']
     depends_on: [frontend, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
@@ -12,7 +12,7 @@ services:
     deploy: {replicas: 1}
     logging:
       driver: gelf
-      options: {tag: edge_router, gelf-address: 'udp://localhost:12201'}
+      options: {tag: edgeRouter, gelf-address: 'udp://localhost:12201'}
 
   frontend:
     depends_on: [orders, catalogue, users, carts, elasticsearch, kibana, logstash]
@@ -27,85 +27,85 @@ services:
   #      Orders
   # ------------------
   orders:
-    depends_on: [users, carts, payment, shipping, orders_db, elasticsearch, kibana,
+    depends_on: [users, carts, payment, shipping, ordersDb, elasticsearch, kibana,
       logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: 'users:carts:payment:shipping:oders_db'}
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: 'users:carts:payment:shipping:odersDb'}
     deploy: {replicas: 1}
     logging:
       driver: gelf
       options: {tag: orders, gelf-address: 'udp://localhost:12201'}
 
-  orders_db:
+  ordersDb:
     image: diunipisocc/chaosecho:1
     environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
     depends_on: [elasticsearch, kibana, logstash]
     logging:
       driver: gelf
-      options: {tag: orders_db, gelf-address: 'udp://localhost:12201'}
+      options: {tag: ordersDb, gelf-address: 'udp://localhost:12201'}
     deploy: {replicas: 1}
 
   # ------------------
   #     Catalogue
   # ------------------
   catalogue:
-    depends_on: [catalogue_db, elasticsearch, kibana, logstash]
+    depends_on: [catalogueDb, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: catalogue_db}
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: catalogueDb}
     deploy: {replicas: 1}
     logging:
       driver: gelf
       options: {tag: catalogue, gelf-address: 'udp://localhost:12201'}
 
-  catalogue_db:
+  catalogueDb:
     image: diunipisocc/chaosecho:1
     environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
     depends_on: [elasticsearch, kibana, logstash]
     logging:
       driver: gelf
-      options: {tag: catalogue_db, gelf-address: 'udp://localhost:12201'}
+      options: {tag: catalogueDb, gelf-address: 'udp://localhost:12201'}
     deploy: {replicas: 1}
 
   # ------------------
   #       Users
   # ------------------
   users:
-    depends_on: [users_db, elasticsearch, kibana, logstash]
+    depends_on: [usersDb, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: users_db}
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: usersDb}
     deploy: {replicas: 1}
     logging:
       driver: gelf
       options: {tag: users, gelf-address: 'udp://localhost:12201'}
 
-  users_db:
+  usersDb:
     image: diunipisocc/chaosecho:1
     environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
     depends_on: [elasticsearch, kibana, logstash]
     logging:
       driver: gelf
-      options: {tag: users_db, gelf-address: 'udp://localhost:12201'}
+      options: {tag: usersDb, gelf-address: 'udp://localhost:12201'}
     deploy: {replicas: 1}
 
   # ------------------
   #       Carts
   # ------------------
   carts:
-    depends_on: [carts_db, elasticsearch, kibana, logstash]
+    depends_on: [cartsDb, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: carts_db}
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: cartsDb}
     deploy: {replicas: 1}
     logging:
       driver: gelf
       options: {tag: carts, gelf-address: 'udp://localhost:12201'}
 
-  carts_db:
+  cartsDb:
     image: diunipisocc/chaosecho:1
     environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
     depends_on: [elasticsearch, kibana, logstash]
     logging:
       driver: gelf
-      options: {tag: carts_db, gelf-address: 'udp://localhost:12201'}
+      options: {tag: cartsDb, gelf-address: 'udp://localhost:12201'}
     deploy: {replicas: 1}
 
   # ------------------
@@ -124,32 +124,32 @@ services:
   #     Shipping
   # ------------------
   shipping:
-    depends_on: [rabbit_mq, elasticsearch, kibana, logstash]
+    depends_on: [rabbitMq, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: rabbit_mq}
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: rabbitMq}
     deploy: {replicas: 1}
     logging:
       driver: gelf
       options: {tag: shipping, gelf-address: 'udp://localhost:12201'}
 
-  rabbit_mq:
+  rabbitMq:
     image: diunipisocc/chaosecho:1
     environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
     depends_on: [elasticsearch, kibana, logstash]
     logging:
       driver: gelf
-      options: {tag: rabbit_mq, gelf-address: 'udp://localhost:12201'}
+      options: {tag: rabbitMq, gelf-address: 'udp://localhost:12201'}
     deploy: {replicas: 1}
 
-  queue_master:
+  queueMaster:
     ports: ['8081:80']
-    depends_on: [rabbit_mq, elasticsearch, kibana, logstash]
+    depends_on: [rabbitMq, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: rabbit_mq}
+    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: rabbitMq}
     deploy: {replicas: 1}
     logging:
       driver: gelf
-      options: {tag: queue_master, gelf-address: 'udp://localhost:12201'}
+      options: {tag: queueMaster, gelf-address: 'udp://localhost:12201'}
 
 
   # ------------------
