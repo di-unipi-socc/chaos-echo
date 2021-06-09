@@ -16,7 +16,6 @@ public class LoggerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        Enumeration<String> attributes = request.getAttributeNames();
         log.info("Received " + request.getMethod() + " request from " + request.getRemoteAddr() + " (ID: " + request.getHeader("X-Request-ID") + ")");
         return true;
     }
