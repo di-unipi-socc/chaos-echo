@@ -1,6 +1,7 @@
 package di.unipi.socc.chaosecho;
 
 import java.util.Random;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -71,7 +72,8 @@ public class EchoServiceController {
                     if(pickValue <= pickProbability) {   
                         // Message preparation
                         HttpHeaders headers = new HttpHeaders();
-                        headers.setContentType(MediaType.APPLICATION_JSON);
+                        headers.setContentType(MediaType.APPLICATION_JSON); // Declaring content type
+                        headers.set("X-Request-ID", UUID.randomUUID().toString()); // Assigning unique id to requests with standard HTTP header
                         String messageForBackend = EchoMessage.random().toString();
                         log.info("Message [ " + messageForBackend + " ] created");
                         HttpEntity<String> request = new HttpEntity<String>(messageForBackend, headers);
