@@ -14,29 +14,29 @@ chmod ugo+x generate_traffic.sh
 sed -i "s/PICK_PERCENTAGE: 50/PICK_PERCENTAGE: 100/g" docker-compose.yml # set services to always invoke backends
 
 OLD_PERC=5
-for PERC in $(seq 5 5 95)
-do 
+for PERC in $(seq 10 10 90)
+do
 	echo "---- FAIL_PERCENTAGE = $PERC ----"
 	# Update docker-compose.yml
 	sed -i "s/FAIL_PERCENTAGE: $OLD_PERC/FAIL_PERCENTAGE: $PERC/g" docker-compose.yml
-	echo "* Updated docker-compose.yml" 
+	echo "* Updated docker-compose.yml"
 
 	# Deploy Docker stack (and wait for services to get online)
 	echo "* Docker stack deployment started"
 	docker stack deploy -c docker-compose.yml echo
-	echo -n "* Waiting for services to get online.." 
-	sleep 180
+	echo -n "* Waiting for services to get online.."
+	sleep 300
 	echo "done!"
 
 	# Load services
 	echo -n "* Loading services.."
-	./generate_traffic.sh -n 20000 -p 0.01 > /dev/null
+	./generate_traffic.sh -n 500000 -p 0.01 > /dev/null
 	echo "done!"
 
 	# Remove Docker stack
 	echo "* Undeployment of Docker stack"
 	docker stack rm echo
-	
+
 	# Rename generate logs
 	LOG_FILE=$(ls echo-*)
 	mv $LOG_FILE fail_$PERC.log
