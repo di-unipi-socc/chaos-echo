@@ -16,7 +16,9 @@ sed -i "s/PICK_PERCENTAGE: 50/PICK_PERCENTAGE: 100/g" docker-compose.yml # set s
 OLD_PERC=5
 for PERC in $(seq 10 10 90)
 do
-	echo "---- FAIL_PERCENTAGE = $PERC ----"
+	echo "|-------------------------------|"
+	echo "|     FAIL_PERCENTAGE = $PERC      |"
+	echo "|-------------------------------|"
 	# Update docker-compose.yml
 	sed -i "s/FAIL_PERCENTAGE: $OLD_PERC/FAIL_PERCENTAGE: $PERC/g" docker-compose.yml
 	echo "* Updated docker-compose.yml"
@@ -24,14 +26,13 @@ do
 	# Deploy Docker stack (and wait for services to get online)
 	echo "* Docker stack deployment started"
 	docker stack deploy -c docker-compose.yml echo
-	echo -n "* Waiting for services to get online.."
-	sleep 300
-	echo "done!"
+	echo "* Waiting for ELK stack to get online"
+	#sleep 60
 
 	# Load services
-	echo -n "* Loading services.."
-	./generate_traffic.sh -n 500000 -p 0.01 > /dev/null
-	echo "done!"
+	echo "* Loading services"
+	./generate_traffic.sh > traffic.log
+	rm traffic.log
 
 	# Remove Docker stack
 	echo "* Undeployment of Docker stack"
@@ -43,10 +44,10 @@ do
 	echo "* Log file stored in fail_$PERC.log"
 
 	# Cleaning Docker runtime
-	echo -n "* Cleaning Docker runtime"
+	echo "* Cleaning Docker runtime"
 	docker container prune -f
 	docker network prune -f
-	sleep 10
+	sleep 60
 
 	OLD_PERC=$PERC
 done
