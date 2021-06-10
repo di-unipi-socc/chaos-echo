@@ -73,7 +73,7 @@ do
 	echo "* Docker stack deployment started"
 	docker stack deploy -c docker-compose.yml echo
 	echo "* Waiting for ELK stack to get online"
-	sleep 100
+	sleep 300
 
 	# Load services
 	echo "* Loading services"
