@@ -67,4 +67,4 @@ for logFile in failFiles:
                 recoveryCount += 1
     if recoveryCount > 0:
         averageRecoveryTime = recoveryTime/recoveryCount
-        print(logFile + "," + averageRecoveryTime)
+        print(logFile + "," + str(averageRecoveryTime))
