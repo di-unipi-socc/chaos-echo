@@ -36,7 +36,7 @@ do
 
 		# Load services
 		echo "* Loading services"
-		./generate_traffic.sh > /dev/null
+		./load.sh -d 600 > /dev/null
 		sleep 60
 
 		# Remove Docker stack
@@ -60,7 +60,7 @@ do
 	# --------------------------------
 	# Process (and clean) obtained logs
 	# --------------------------------
-	python3 avg_recovery_time.py > replicas_$REPEAT.csv
+	python3 avg_recovery_time.py > percentage_$REPEAT.csv
 	rm fail_*
 
 	# -----------------------------------------
@@ -87,7 +87,7 @@ do
 
 		# Load services
 		echo "* Loading services"
-		./generate_traffic.sh > /dev/null
+		./load.sh -d 600 > /dev/null
 		sleep 60
 
 		# Remove Docker stack
