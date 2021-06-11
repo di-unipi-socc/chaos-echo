@@ -36,8 +36,8 @@ do
 
 		# Load services
 		echo "* Loading services"
-		./load.sh > traffic.log
-		rm traffic.log
+		./generate_traffic.sh > /dev/null
+		sleep 60
 
 		# Remove Docker stack
 		echo "* Undeployment of Docker stack"
@@ -87,8 +87,8 @@ do
 
 		# Load services
 		echo "* Loading services"
-		./generate_traffic.sh > traffic.log
-		rm traffic.log
+		./generate_traffic.sh > /dev/null
+		sleep 60
 
 		# Remove Docker stack
 		echo "* Undeployment of Docker stack"
