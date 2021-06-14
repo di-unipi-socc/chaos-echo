@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Repeat experiments 10 times 
-for REPEAT in $(seq 1 1 10)
+# Repeat experiments 5 times 
+for REPEAT in $(seq 1 1 5)
 do
 
 	# ---------------------------------------
@@ -111,7 +111,7 @@ do
 	# --------------------------------
 	# Remove (copied) deployment files
 	# --------------------------------
-	rm docker-compose.yml logstash.conf generate_traffic.sh
+	rm docker-compose.yml logstash.conf load.sh
 
 	# --------------------------------
 	# Process (and clean) obtained logs
