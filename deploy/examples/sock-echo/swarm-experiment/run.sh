@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REPEAT=2
+REPEAT=8
 
 # ---------------------------------------
 # Copy deployment files in current folder
@@ -34,8 +34,8 @@ do
 
 	# Load services
 	echo "* Loading services"
-	./load.sh -d 600 > /dev/null
-	sleep 60
+	./load.sh -d 1200 > /dev/null
+	sleep 180
 
 	# Remove Docker stack
 	echo "* Undeployment of Docker stack"
@@ -50,7 +50,7 @@ do
 	echo "* Cleaning Docker runtime"
 	docker container prune -f
 	docker network prune -f
-	sleep 60
+	sleep 30
 
 	OLD_PERC=$PERC
 done
@@ -85,8 +85,8 @@ do
 
 	# Load services
 	echo "* Loading services"
-	./load.sh -d 600 > /dev/null
-	sleep 60
+	./load.sh -d 1200 > /dev/null
+	sleep 180
 	# Remove Docker stack
 	echo "* Undeployment of Docker stack"
 	docker stack rm echo
@@ -100,7 +100,7 @@ do
 	echo "* Cleaning Docker runtime"
 	docker container prune -f
 	docker network prune -f
-	sleep 60
+	sleep 30
 
 	OLD_REPLICAS=$REPLICAS
 done
