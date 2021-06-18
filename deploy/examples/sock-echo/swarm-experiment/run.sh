@@ -47,7 +47,7 @@ do
 	echo "* Cleaning Docker runtime"
 	docker container prune -f
 	docker network prune -f
-	sleep 60
+	sleep 30
 
 	OLD_PERC=$PERC
 done
@@ -106,10 +106,10 @@ done
 # --------------------------------
 # Remove (copied) deployment files
 # --------------------------------
-rm docker-compose.yml logstash.conf generate_traffic.sh
+rm docker-compose.yml logstash.conf load.sh
 
 # --------------------------------
 # Process (and clean) obtained logs
 # --------------------------------
-python3 avg_recovery_time.py > replicas_$REPEAT.csv
+python3 avg_recovery_time.py > replicas.csv
 mv fail_* run_logs
