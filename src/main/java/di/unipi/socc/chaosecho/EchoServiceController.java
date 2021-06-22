@@ -33,14 +33,17 @@ public class EchoServiceController {
     @Value("${BACKEND_SERVICES:#{null}}") // default to null, if no backend service is listed
     private String backendServices;
 
-    @Value("${TIMEOUT}")
+    @Value("${TIMEOUT:#{10000}}") // default to 10000, if not specified
     private int timeout;
 
-    @Value("${PICK_PERCENTAGE}")
+    @Value("${P_PICK:#{100}}") // default to 1, if not specified
     private int pickProbability;
 
-    @Value("${FAIL_PERCENTAGE}")
+    @Value("${P_FAIL:#{10}}") // default to 0.1, if not specified
     private int failProbability;
+
+    @Value("${P_CRASH:#{50}}") // default to 0.5, if not specified
+    private int crashProbability;
 
     @PostMapping(
         consumes={MediaType.APPLICATION_JSON_VALUE},
@@ -103,8 +106,8 @@ public class EchoServiceController {
         int failValue = rand.nextInt(100);
         if (failValue <= failProbability) {
             // Case: Service unexpectedly crashing (sometimes logging, sometimes not)
-            boolean crashing = rand.nextBoolean();
-            if(crashing) {
+            int crashValue = rand.nextInt(100);
+            if(crashValue <= crashProbability) {
                 log.debug("Crashing");
                 boolean crashLogged = rand.nextBoolean();
                 if(crashLogged) {

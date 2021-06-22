@@ -8,7 +8,7 @@ services:
     ports: ['8080:80']
     depends_on: [frontend, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: frontend}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000, BACKEND_SERVICES: frontend}
     deploy: {replicas: 1}
     logging:
       driver: gelf
@@ -17,7 +17,7 @@ services:
   frontend:
     depends_on: [orders, catalogue, users, carts, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: 'orders:catalogue:users:carts'}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000, BACKEND_SERVICES: 'orders:catalogue:users:carts'}
     deploy: {replicas: 1}
     logging:
       driver: gelf
@@ -30,7 +30,7 @@ services:
     depends_on: [users, carts, payment, shipping, ordersDb, elasticsearch, kibana,
       logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: 'users:carts:payment:shipping:odersDb'}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000, BACKEND_SERVICES: 'users:carts:payment:shipping:odersDb'}
     deploy: {replicas: 1}
     logging:
       driver: gelf
@@ -38,7 +38,7 @@ services:
 
   ordersDb:
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000}
     depends_on: [elasticsearch, kibana, logstash]
     logging:
       driver: gelf
@@ -51,7 +51,7 @@ services:
   catalogue:
     depends_on: [catalogueDb, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: catalogueDb}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000, BACKEND_SERVICES: catalogueDb}
     deploy: {replicas: 1}
     logging:
       driver: gelf
@@ -59,7 +59,7 @@ services:
 
   catalogueDb:
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000}
     depends_on: [elasticsearch, kibana, logstash]
     logging:
       driver: gelf
@@ -72,7 +72,7 @@ services:
   users:
     depends_on: [usersDb, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: usersDb}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000, BACKEND_SERVICES: usersDb}
     deploy: {replicas: 1}
     logging:
       driver: gelf
@@ -80,7 +80,7 @@ services:
 
   usersDb:
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000}
     depends_on: [elasticsearch, kibana, logstash]
     logging:
       driver: gelf
@@ -93,7 +93,7 @@ services:
   carts:
     depends_on: [cartsDb, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: cartsDb}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000, BACKEND_SERVICES: cartsDb}
     deploy: {replicas: 1}
     logging:
       driver: gelf
@@ -101,7 +101,7 @@ services:
 
   cartsDb:
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000}
     depends_on: [elasticsearch, kibana, logstash]
     logging:
       driver: gelf
@@ -113,7 +113,7 @@ services:
   # ------------------
   payment:
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000}
     depends_on: [elasticsearch, kibana, logstash]
     logging:
       driver: gelf
@@ -126,7 +126,7 @@ services:
   shipping:
     depends_on: [rabbitMq, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: rabbitMq}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000, BACKEND_SERVICES: rabbitMq}
     deploy: {replicas: 1}
     logging:
       driver: gelf
@@ -134,7 +134,7 @@ services:
 
   rabbitMq:
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000}
     depends_on: [elasticsearch, kibana, logstash]
     logging:
       driver: gelf
@@ -145,7 +145,7 @@ services:
     ports: ['8081:80']
     depends_on: [rabbitMq, elasticsearch, kibana, logstash]
     image: diunipisocc/chaosecho:1
-    environment: {PICK_PERCENTAGE: 50, FAIL_PERCENTAGE: 5, TIMEOUT: 10000, BACKEND_SERVICES: rabbitMq}
+    environment: {P_PICK: 50, P_FAIL: 5, TIMEOUT: 10000, BACKEND_SERVICES: rabbitMq}
     deploy: {replicas: 1}
     logging:
       driver: gelf
