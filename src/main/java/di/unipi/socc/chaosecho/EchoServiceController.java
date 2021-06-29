@@ -30,7 +30,7 @@ public class EchoServiceController {
     @Autowired
     private ApplicationContext appContext;
 
-    @Value("${BACKEND_SERVICES:#{null}}") // default to null, if no backend service is listed
+    @Value("${DEPENDS_ON:#{null}}") // default to null, if no backend service is listed
     private String backendServices;
 
     @Value("${TIMEOUT:#{10000}}") // default to 10000, if not specified

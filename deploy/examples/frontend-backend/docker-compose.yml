@@ -10,7 +10,7 @@ services:
         frontend:
                 image: diunipisocc/chaosecho:1
                 environment:
-                        BACKEND_SERVICES: "backend"
+                        DEPENDS_ON: "backend"
                         TIMEOUT: 10000
                         P_INVOKE: 60
                         P_FAIL: 5
