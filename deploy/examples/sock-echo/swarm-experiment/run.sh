@@ -5,8 +5,8 @@
 # ---------------------------------------
 cp ../docker-compose.yml docker-compose.yml
 cp ../logstash.conf logstash.conf
-cp ../../../../load.sh load.sh
-chmod ugo+x load.sh
+cp ../../../../generate_workload.sh generate_workload.sh
+chmod ugo+x generate_workload.sh
 
 sed -i "s/PICK_PERCENTAGE: 50/PICK_PERCENTAGE: 100/g" docker-compose.yml # set services to always invoke backends
 
@@ -31,7 +31,7 @@ do
 
 	# Load services
 	echo "* Loading services"
-	./load.sh -d 1200 > /dev/null
+	./generate_workload.sh -d 1200 > /dev/null
 	sleep 180
 
 	# Remove Docker stack
@@ -82,7 +82,7 @@ do
 
 	# Load services
 	echo "* Loading services"
-	./load.sh -d 1200 > /dev/null
+	./generate_workload.sh -d 1200 > /dev/null
 	sleep 180
 
 	# Remove Docker stack
@@ -106,7 +106,7 @@ done
 # --------------------------------
 # Remove (copied) deployment files
 # --------------------------------
-rm docker-compose.yml logstash.conf load.sh
+rm docker-compose.yml logstash.conf generate_workload.sh
 
 # --------------------------------
 # Process (and clean) obtained logs
