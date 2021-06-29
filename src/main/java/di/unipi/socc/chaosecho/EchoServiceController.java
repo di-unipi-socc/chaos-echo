@@ -36,8 +36,8 @@ public class EchoServiceController {
     @Value("${TIMEOUT:#{10000}}") // default to 10000, if not specified
     private int timeout;
 
-    @Value("${P_PICK:#{100}}") // default to 1, if not specified
-    private int pickProbability;
+    @Value("${P_INVOKE:#{100}}") // default to 1, if not specified
+    private int invokeProbability;
 
     @Value("${P_FAIL:#{10}}") // default to 0.1, if not specified
     private int failProbability;
@@ -71,8 +71,8 @@ public class EchoServiceController {
             if(backendServices != null) {
                 // Send random messages to (a random subset of) backend services to emulate message processing
                 for (String service : backendServices.split(":")) {
-                    int pickValue = rand.nextInt(100);
-                    if(pickValue <= pickProbability) {   
+                    int invokeValue = rand.nextInt(100);
+                    if(invokeValue <= invokeProbability) {   
                         // Message preparation
                         HttpHeaders headers = new HttpHeaders();
                         headers.setContentType(MediaType.APPLICATION_JSON); // Declaring content type

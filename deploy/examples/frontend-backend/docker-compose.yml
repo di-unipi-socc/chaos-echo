@@ -12,7 +12,7 @@ services:
                 environment:
                         BACKEND_SERVICES: "backend"
                         TIMEOUT: 10000
-                        P_PICK: 60
+                        P_INVOKE: 60
                         P_FAIL: 5
                         P_CRASH: 50
                 depends_on:
@@ -33,7 +33,7 @@ services:
                 image: diunipisocc/chaosecho:1
                 environment:
                         TIMEOUT: 10000
-                        P_PICK: 60
+                        P_INVOKE: 60
                         P_FAIL: 20
                 deploy:
                         replicas: 2
