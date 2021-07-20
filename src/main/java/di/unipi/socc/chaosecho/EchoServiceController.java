@@ -82,15 +82,15 @@ public class EchoServiceController {
                         HttpEntity<String> request = new HttpEntity<String>(messageForBackend, headers);
                         
                         // Sending request message and waiting for response
-                        log.info("Sending message to " + service + "(request_id: " + headers.get("X-Request-ID" + ")"));
+                        log.info("Sending message to " + service + "(request_id: " + headers.get("X-Request-ID") + ")");
                         try {
                             String endpoint = "http://" + service + "/echo";
                             ResponseEntity<EchoMessage> response = rt.postForEntity(endpoint, request, EchoMessage.class);
-                            log.info("Receiving answer from " + service + "(request_id: " + headers.get("X-Request-ID" + ")"));
+                            log.info("Receiving answer from " + service + "(request_id: " + headers.get("X-Request-ID") + ")");
 
                             // Checking response's status code
                             if(!response.getStatusCode().equals(HttpStatus.OK)) {
-                                log.error("Error response (code: " + response.getStatusCode() + ") received from " + service  + "(request_id: " + headers.get("X-Request-ID" + ")"));
+                                log.error("Error response (code: " + response.getStatusCode() + ") received from " + service  + "(request_id: " + headers.get("X-Request-ID") + ")");
                                 reply = new ResponseEntity<EchoMessage>(EchoMessage.fail("Failing to contact backend services"), HttpStatus.INTERNAL_SERVER_ERROR);
                             }
                         } catch (Exception e) {
