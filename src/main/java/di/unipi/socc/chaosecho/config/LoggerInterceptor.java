@@ -14,18 +14,18 @@ public class LoggerInterceptor implements HandlerInterceptor {
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        log.info("Received " + request.getMethod() + " request from " + request.getRemoteAddr() + " (ID: " + request.getHeader("X-Request-ID") + ")");
+        log.info("Received " + request.getMethod() + " request from " + request.getRemoteAddr() + " (request_id: " + request.getHeader("X-Request-ID") + ")");
         return true;
     }
 
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
-        log.info("Handled " + request.getMethod() + " request from " + request.getRemoteAddr() + " (ID: " + request.getHeader("X-Request-ID") + ")");
+        log.info("Handled " + request.getMethod() + " request from " + request.getRemoteAddr() + " (request_id: " + request.getHeader("X-Request-ID") + ")");
     }
     
     @Override
     public void afterCompletion(HttpServletRequest request, HttpServletResponse response,Object handler, Exception ex) throws Exception {
         if (ex == null) 
-            log.info("Answered to " + request.getMethod() + " request from " + request.getRemoteAddr() + " with code: " + response.getStatus());
+            log.info("Answered to " + request.getMethod() + " request from " + request.getRemoteAddr() + " with code: " + response.getStatus() + " (request_id: " + request.getHeader("X-Request-ID") + ")");
     }
 }
