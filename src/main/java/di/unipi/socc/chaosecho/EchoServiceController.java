@@ -72,7 +72,7 @@ public class EchoServiceController {
                 // Send random messages to (a random subset of) backend services to emulate message processing
                 for (String service : backendServices.split(":")) {
                     int invokeValue = rand.nextInt(100);
-                    if(invokeValue <= invokeProbability) {   
+                    if(invokeValue < invokeProbability) {   
                         // Message preparation
                         HttpHeaders headers = new HttpHeaders();
                         headers.setContentType(MediaType.APPLICATION_JSON); // Declaring content type
@@ -104,10 +104,10 @@ public class EchoServiceController {
         
         // Checks whether it (randomly) failed, independently from backend services 
         int failValue = rand.nextInt(100);
-        if (failValue <= failProbability) {
+        if (failValue < failProbability) {
             // Case: Service unexpectedly crashing (sometimes logging, sometimes not)
             int crashValue = rand.nextInt(100);
-            if(crashValue <= crashProbability) {
+            if(crashValue < crashProbability) {
                 log.debug("Crashing");
                 boolean crashLogged = rand.nextBoolean();
                 if(crashLogged) {
