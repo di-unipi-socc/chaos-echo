@@ -53,6 +53,6 @@ done
 
 SECONDS=0
 while (( SECONDS <= D )); do  # loop until duration D (seconds) has expired
-	curl -X POST -H 'Content-Type: application/json' -H 'Cache-Control: no-cache' -i http://$A/echo --data '{ "content": "FRONTEND REQUEST", "hash": "1" }' --retry 6 --retry-connrefused --silent &
+	curl -X POST -H 'Content-Type: application/json' -H 'Cache-Control: no-cache' -i http://$A/echo --data '{ "content": "FRONTEND REQUEST", "hash": "1" }' --silent & # --retry 6 --retry-connrefused 
 	sleep $P
 done
