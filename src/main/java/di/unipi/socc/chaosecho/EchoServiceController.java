@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
 @RestController
@@ -87,12 +89,9 @@ public class EchoServiceController {
                             String endpoint = "http://" + service + "/echo";
                             ResponseEntity<EchoMessage> response = rt.postForEntity(endpoint, request, EchoMessage.class);
                             log.info("Receiving answer from " + service + " (request_id: " + headers.get("X-Request-ID") + ")");
-
-                            // Checking response's status code
-                            if(!response.getStatusCode().equals(HttpStatus.OK)) {
-                                log.error("Error response (code: " + response.getStatusCode() + ") received from " + service  + " (request_id: " + headers.get("X-Request-ID") + ")");
+                        } catch (HttpServerErrorException e) {
+                            log.error("Error response (code: " + e.getRawStatusCode() + ") received from " + service  + " (request_id: " + headers.get("X-Request-ID") + ")");
                                 reply = new ResponseEntity<EchoMessage>(EchoMessage.fail("Failing to contact backend services"), HttpStatus.INTERNAL_SERVER_ERROR);
-                            }
                         } catch (Exception e) {
                             log.error("Failing to contact " + service + " (request_id: " + headers.get("X-Request-ID") + "). Root cause: " + e);
                             reply = new ResponseEntity<EchoMessage>(EchoMessage.fail("Failing to contact backend services"), HttpStatus.INTERNAL_SERVER_ERROR);
