@@ -59,4 +59,11 @@ public class EchoMessage {
         return em;
     }
     
+    @Override
+    public boolean equals(Object o) {
+        EchoMessage em = (EchoMessage) o;
+        if (this.hash == em.getHash() && this.content.equals(em.getContent()))
+            return true;
+        return false;
+    }
 }

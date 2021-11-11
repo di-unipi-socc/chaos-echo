@@ -19,7 +19,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
 
@@ -52,12 +51,17 @@ public class EchoServiceController {
         produces={MediaType.APPLICATION_JSON_VALUE}
     )
     public ResponseEntity<EchoMessage> echo(@RequestBody EchoMessage message) {
-        // Logging the processing of received message
-        log.info("Processing message: " + message);
-
         // Random number generator (utility)
         Random rand = new Random();
         
+        // If frontend, generate message to propagate to backend services
+        // (using the same message to provide "ground-thruth" for analysing failure cascades)
+        EchoMessage messageForBackend = message;
+        while(messageForBackend.getContent().toUpperCase().contains("FRONTEND"))
+            messageForBackend = EchoMessage.random();
+        if(!messageForBackend.equals(message))
+            log.info("Message [ " + messageForBackend + " ] created");
+
         // Reply message
         ResponseEntity<EchoMessage> reply = new ResponseEntity<EchoMessage>(message, HttpStatus.OK);
 
@@ -79,15 +83,14 @@ public class EchoServiceController {
                         HttpHeaders headers = new HttpHeaders();
                         headers.setContentType(MediaType.APPLICATION_JSON); // Declaring content type
                         headers.set("X-Request-ID", UUID.randomUUID().toString()); // Assigning unique id to requests with standard HTTP header
-                        String messageForBackend = EchoMessage.random().toString();
-                        log.info("Message [ " + messageForBackend + " ] created");
-                        HttpEntity<String> request = new HttpEntity<String>(messageForBackend, headers);
+                        HttpEntity<EchoMessage> request = new HttpEntity<EchoMessage>(messageForBackend, headers);
                         
                         // Sending request message and waiting for response
                         log.info("Sending message to " + service + " (request_id: " + headers.get("X-Request-ID") + ")");
+                        log.info("Sent message: " + messageForBackend + " (request_id: " + headers.get("X-Request-ID") + ")");
                         try {
                             String endpoint = "http://" + service + "/echo";
-                            ResponseEntity<EchoMessage> response = rt.postForEntity(endpoint, request, EchoMessage.class);
+                            rt.postForEntity(endpoint, request, EchoMessage.class);
                             log.info("Receiving answer from " + service + " (request_id: " + headers.get("X-Request-ID") + ")");
                         } catch (HttpServerErrorException e) {
                             log.error("Error response (code: " + e.getRawStatusCode() + ") received from " + service  + " (request_id: " + headers.get("X-Request-ID") + ")");
