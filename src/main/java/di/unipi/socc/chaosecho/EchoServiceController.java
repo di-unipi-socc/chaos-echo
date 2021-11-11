@@ -60,7 +60,8 @@ public class EchoServiceController {
         EchoMessage messageForBackend = message;
         while(messageForBackend.getContent().toUpperCase().contains("FRONTEND"))
             messageForBackend = EchoMessage.random();
-        log.info("Message [ " + messageForBackend + " ] created");
+        if(!messageForBackend.equals(message))
+            log.info("Message [ " + messageForBackend + " ] created");
 
         // Reply message
         ResponseEntity<EchoMessage> reply = new ResponseEntity<EchoMessage>(message, HttpStatus.OK);
