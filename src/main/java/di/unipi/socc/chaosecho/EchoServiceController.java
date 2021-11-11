@@ -57,9 +57,9 @@ public class EchoServiceController {
         
         // If frontend, generate message to propagate to backend services
         // (using the same message to provide "ground-thruth" for analysing failure cascades)
-        String messageForBackend = message.getContent();
-        while(messageForBackend.toUpperCase().contains("FRONTEND"))
-            messageForBackend = EchoMessage.random().toString();
+        EchoMessage messageForBackend = message;
+        while(messageForBackend.getContent().toUpperCase().contains("FRONTEND"))
+            messageForBackend = EchoMessage.random();
         log.info("Message [ " + messageForBackend + " ] created");
 
         // Reply message
@@ -83,7 +83,7 @@ public class EchoServiceController {
                         HttpHeaders headers = new HttpHeaders();
                         headers.setContentType(MediaType.APPLICATION_JSON); // Declaring content type
                         headers.set("X-Request-ID", UUID.randomUUID().toString()); // Assigning unique id to requests with standard HTTP header
-                        HttpEntity<String> request = new HttpEntity<String>(messageForBackend, headers);
+                        HttpEntity<EchoMessage> request = new HttpEntity<EchoMessage>(messageForBackend, headers);
                         
                         // Sending request message and waiting for response
                         log.info("Sending message to " + service + " (request_id: " + headers.get("X-Request-ID") + ")");
